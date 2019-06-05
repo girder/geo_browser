@@ -1,7 +1,17 @@
 # Girder GeoBrowser
 
-## Project setup
+## Requirements
+* The Girder [Geospatial](https://github.com/OpenGeoscience/girder_geospatial) Plugin
+
+## Installation
 ```
+pip install ./plugin
+```
+
+
+## Standalone Frontend Setup
+```
+cd explorer
 yarn install
 ```
 
