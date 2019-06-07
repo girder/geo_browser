@@ -4,6 +4,7 @@ node_modules
 *.pyc
 __pycache__
 *.egg-info
+yarn.lock
 
 # local env files
 .env.local

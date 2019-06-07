@@ -7,6 +7,9 @@ const store = new Vuex.Store({
     user: {
       loggedIn: false,
     },
+    api: {
+      accessed: false,
+    },
   },
   getters: {
     user: state => state.user,
@@ -18,6 +21,9 @@ const store = new Vuex.Store({
         ...payload,
         loggedIn: true,
       };
+    },
+    SET_API_ACCESSED(state) {
+      state.api.accessed = true;
     },
     USER_LOGOUT(state) {
       state.user = {
