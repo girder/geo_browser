@@ -61,10 +61,11 @@ def forceRecomputeAllHandler(self, params):
                     'coordinates': [list(convexHull.exterior.coords)]
             }
             collection = CollectionModel().save(collection)
-            returnFields = ['_id', 'name', BOUNDS_KEY]
 
             filteredCollections.append(
-                {k: v for (k, v) in collection.items() if k in returnFields})
+                {k: v for (k, v) in collection.items()
+                    if k in COLLECTION_RETURN_FIELDS}
+            )
 
     return filteredCollections
 
@@ -79,6 +80,9 @@ def forceDeleteAllHandler(self, params):
     for collection in CollectionModel().list(user=self.getCurrentUser()):
         if BOUNDS_KEY in collection:
             del collection[BOUNDS_KEY]
-            updatedCollections.append(CollectionModel().save(collection))
+            updatedCollections.append(
+                {k: v for (k, v) in CollectionModel().save(collection).items()
+                    if k in COLLECTION_RETURN_FIELDS}
+            )
 
     return updatedCollections
