@@ -10,6 +10,9 @@ const store = new Vuex.Store({
     api: {
       accessed: false,
     },
+    app: {
+      navDrawerMini: true,
+    },
   },
   getters: {
     user: state => state.user,
@@ -29,6 +32,9 @@ const store = new Vuex.Store({
       state.user = {
         loggedIn: false,
       };
+    },
+    TOGGLE_NAV_DRAWER(state) {
+      state.app.navDrawerMini = !state.app.navDrawerMini;
     },
     /* eslint-enable no-param-reassign */
   },
