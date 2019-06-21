@@ -1,6 +1,6 @@
 from girder.api import access
 from girder.api.describe import autoDescribeRoute, describeRoute, Description
-from girder.api.rest import boundHandler
+from girder.api.rest import boundHandler, filtermodel
 from girder.constants import AccessType, TokenScope
 from girder.models.collection import Collection as CollectionModel
 from .utils import BOUNDS_KEY, computeCollectionConvexHull
@@ -86,3 +86,20 @@ def forceDeleteAllHandler(self, params):
             )
 
     return updatedCollections
+
+
+@access.admin
+@boundHandler
+@filtermodel(model=CollectionModel)
+@autoDescribeRoute(
+    Description('Use the mongo query language to do faceted search')
+    .jsonParam('query', 'A JSON object containing the mongo query to run',
+               paramType='query', requireObject=True)
+    # For some reason, paramType needs to be query? (cant be body)
+)
+def facetedSearchHandler(self, query):
+    docs = CollectionModel().findWithPermissions(
+        query=query,
+        user=self.getCurrentUser()
+    )
+    return [doc for doc in docs]
