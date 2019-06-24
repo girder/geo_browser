@@ -17,7 +17,6 @@ import Stroke from 'ol/style/Stroke';
 import { Select, MouseWheelZoom, DragPan } from 'ol/interaction';
 import { click } from 'ol/events/condition';
 import { capitalize } from 'lodash';
-import Cities from '@/assets/cities.json';
 import { mapGetters } from 'vuex';
 
 
@@ -91,16 +90,7 @@ export default {
         ],
       });
     },
-    loadFeaturesLocal() {
-      this.ol.features = new GeoJSON({
-        featureProjection: 'EPSG:3857',
-      }).readFeatures(Cities);
-
-      this.ol.vectorSource.clear();
-      this.ol.vectorSource.addFeatures(this.ol.features);
-    },
     async loadFeaturesRemote() {
-      console.log('LOAD');
       const collectionFeatures = (await this.girderRest.get(
         'collection/geobrowser',
         { params: {} },

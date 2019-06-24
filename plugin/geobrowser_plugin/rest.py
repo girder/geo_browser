@@ -1,5 +1,5 @@
 from girder.api import access
-from girder.api.describe import autoDescribeRoute, describeRoute, Description
+from girder.api.describe import describeRoute, Description
 from girder.api.rest import boundHandler, filtermodel
 from girder.constants import AccessType, TokenScope
 from girder.models.collection import Collection as CollectionModel
@@ -10,14 +10,16 @@ COLLECTION_RETURN_FIELDS = ['_id', 'name', BOUNDS_KEY]
 
 @access.public(scope=TokenScope.DATA_READ)
 @boundHandler
-@autoDescribeRoute(
+@describeRoute(
     Description('Query for the items that matches a given geospatial criteria')
     .responseClass('Collection')
     .modelParam('id', model=CollectionModel, level=AccessType.READ)
     .errorResponse('ID was invalid.')
     .errorResponse('Read permission denied on the collection.', 403)
 )
-def singleCollectionHandler(self, params, collection):
+def singleCollectionHandler(self, params, id=None):
+    collection = CollectionModel().load(id, user=self.getCurrentUser())
+
     if (BOUNDS_KEY in collection):
         return {k: v for (k, v) in collection.items()
                 if k in COLLECTION_RETURN_FIELDS}
