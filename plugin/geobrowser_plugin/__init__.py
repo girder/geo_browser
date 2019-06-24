@@ -5,7 +5,8 @@ from .rest import (
     singleCollectionHandler,
     listCollectionHandler,
     forceRecomputeAllHandler,
-    forceDeleteAllHandler
+    forceDeleteAllHandler,
+    facetedSearchHandler
 )
 
 
@@ -29,6 +30,11 @@ class GeoBrowserPlugin(GirderPlugin):
             'GET',
             ('geobrowser',),
             listCollectionHandler)
+
+        info['apiRoot'].collection.route(
+            'GET',
+            ('geobrowser', 'search'),
+            facetedSearchHandler)
 
         info['apiRoot'].collection.route(
             'PUT',
