@@ -12,6 +12,11 @@
           <DataBrowser :location.sync="location" />
         </v-flex>
       </v-layout>
+      <v-layout>
+        <v-flex>
+          <QueryBox />
+        </v-flex>
+      </v-layout>
     </v-container>
   </div>
 </template>
@@ -20,12 +25,14 @@
 
 import { DataBrowser } from '@girder/components/src/components';
 import CollectionMap from '@/components/CollectionMap.vue';
+import QueryBox from '@/components/QueryBox.vue';
 
 export default {
   name: 'MainPage',
   components: {
     CollectionMap,
     DataBrowser,
+    QueryBox,
   },
   data() {
     return {

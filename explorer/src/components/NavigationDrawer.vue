@@ -1,6 +1,6 @@
 <template class="nav-drawer-container">
   <v-navigation-drawer
-    :mini-variant.sync="navDrawerMini"
+    :mini-variant="navDrawerMini"
     app
     hide-overlay
   >

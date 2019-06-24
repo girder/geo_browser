@@ -1,6 +1,6 @@
 from girder import events
 from girder.plugin import GirderPlugin
-from .utils import itemAddedToCollection, itemRemovedFromCollection
+from .utils import itemAddedToCollection
 from .rest import (
     singleCollectionHandler,
     listCollectionHandler,
