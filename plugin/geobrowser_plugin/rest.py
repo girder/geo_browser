@@ -99,7 +99,7 @@ def forceDeleteAllHandler(self, params):
 )
 def facetedSearchHandler(self, params):
     query = self.getParamJson('query', params)
-    print(query)
+
     docs = CollectionModel().findWithPermissions(
         query=query,
         user=self.getCurrentUser()
