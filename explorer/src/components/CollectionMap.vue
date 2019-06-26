@@ -100,7 +100,6 @@ export default {
       this.ol.vectorSource.addFeatures(this.ol.features);
     },
     async loadFeaturesRemote() {
-      console.log('LOAD');
       const collectionFeatures = (await this.girderRest.get(
         'collection/geobrowser',
         { params: {} },
