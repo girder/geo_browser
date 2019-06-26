@@ -55,10 +55,17 @@ class CleanBuildCommand(Command):
             check_call(cmd)
 
 
+with open('README.md') as readme:
+    long_description = readme.read()
+
 setup(
     name='girder-geobrowser',
     version='0.0.1',
-    description='',
+    description='Map-oriented custom Girder app'
+                'for geospatial metadata browsing',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    url='https://github.com/girder/geo_browser',
     maintainer='Kitware, Inc.',
     maintainer_email='kitware@kitware.com',
     include_package_data=True,
