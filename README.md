@@ -11,7 +11,7 @@ pip install ./plugin
 
 ## Standalone Frontend Setup
 ```
-cd explorer
+cd gui
 yarn install
 ```
 
