@@ -76,6 +76,9 @@ setup(
     entry_points={
         'girder.plugin': [
             'geobrowser = geobrowser_plugin:GeoBrowserPlugin'
+        ],
+        'girder.cli_plugins': [
+            'extract-geospatial = geobrowser_plugin.extraction:extract'
         ]
     },
     cmdclass={
