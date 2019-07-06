@@ -1,7 +1,12 @@
+import os
+from pkg_resources import resource_filename
+
 from girder import events
 from girder.plugin import GirderPlugin
-from .utils import itemAddedToCollection
-from .rest import (
+from girder.utility import config
+
+from geobrowser_plugin.utils import itemAddedToCollection
+from geobrowser_plugin.rest import (
     singleCollectionHandler,
     listCollectionHandler,
     forceRecomputeAllHandler,
@@ -45,3 +50,14 @@ class GeoBrowserPlugin(GirderPlugin):
             'DELETE',
             ('geobrowser',),
             forceDeleteAllHandler)
+
+        if config.getConfig()['server']['mode'] == 'production':
+            info['config']['/geobrowser'] = {
+                'tools.staticdir.on': True,
+                'tools.staticdir.dir': os.path.realpath(
+                    resource_filename(
+                        'geobrowser_plugin',
+                        'external_web_client')
+                ),
+                'tools.staticdir.index': 'index.html'
+            }
