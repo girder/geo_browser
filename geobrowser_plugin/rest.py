@@ -90,7 +90,7 @@ def forceDeleteAllHandler(self, params):
     return updatedCollections
 
 
-@access.admin
+@access.public(scope=TokenScope.DATA_READ)
 @boundHandler
 @filtermodel(model=CollectionModel)
 @describeRoute(
