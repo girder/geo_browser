@@ -42,11 +42,8 @@
                     </v-flex>
                   </v-layout>
                 </v-flex>
-                <v-flex grow>
-                  <v-card
-                    class="ma-2"
-                    flat
-                  >
+                <v-flex grow class="ma-2">
+                  <v-card flat>
                     <v-text-field
                       v-model="param.key"
                       label="Key"
@@ -54,11 +51,22 @@
                       solo
                     />
                     <v-text-field
+                      v-if="param.type !== 'date'"
                       v-model="param.value"
                       label="Value"
                       solo
                       :rules="getRules(param)"
                     />
+                    <v-flex v-else shrink>
+                      <v-select
+                        :items=dateComparisonTypes
+                        @change="selectDateComparisonType"
+                      />
+                      <v-date-picker
+                        class="my-3"
+                        v-model="param.value"
+                      />
+                    </v-flex>
                   </v-card>
                 </v-flex>
               </v-layout>
@@ -86,7 +94,7 @@
               <v-text-field
                 id="query"
                 append-icon="mdi-content-copy"
-                :value="query"
+                :value="stringQuery"
                 solo
                 readonly
                 hide-details
@@ -96,6 +104,7 @@
             <v-flex shrink>
               <v-btn
                 color="success"
+                @click="sendSearchQuery"
               >
                 Search
               </v-btn>
@@ -107,8 +116,25 @@
           >
             <v-flex>
               <v-card v-if="searchResults.length">
-                <v-list>
-                </v-list>
+                <v-expansion-panel
+                  v-model="resultsPanel"
+                  expand
+                >
+                  <v-expansion-panel-content
+                    v-for="(result, i) in searchResults"
+                    :key="i"
+                  >
+                    <template v-slot:header>
+                      <h1>{{ result.name }}</h1>
+                    </template>
+                    <v-card class="ma-3">
+                      <VueJsonPretty
+                        :data="result"
+                        highlight-mouseover-node
+                      />
+                    </v-card>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
               </v-card>
             </v-flex>
             <v-spacer />
@@ -121,16 +147,32 @@
 
 <script>
 
+import VueJsonPretty from 'vue-json-pretty';
+
 export default {
   name: 'QueryBuilder',
   inject: ['girderRest'],
+  components: {
+    VueJsonPretty,
+  },
   data() {
     return {
       searchParams: [],
       searchResults: [],
+      resultsPanel: [],
       rules: {
-        number: val => !/[a-zA-Z]/.test(val) || 'Number cannot contain alphabetical characters',
+        number: val => this.validNumber(val) || 'Invalid Number',
+        json: val => this.validJSON(val) || 'Invalid JSON'
       },
+      selectedDateComparisonType: null,
+      dateComparisonTypes: [
+        '$gt',
+        '$gte',
+        '$lt',
+        '$lte',
+        '$eq',
+        '$ne',
+      ],
       paramTypes: [
         {
           label: 'String',
@@ -144,6 +186,10 @@ export default {
           label: 'Date',
           value: 'date',
         },
+        {
+          label: 'JSON',
+          value: 'json',
+        },
       ],
       defaultParamType: 'string',
       error: false,
@@ -151,23 +197,48 @@ export default {
   },
   computed: {
     query() {
+      const reducer = (obj, param) => {
+        let paramValue = param.value;
+        if (param.type === 'number') paramValue = this.validNumber(paramValue) ? Number(paramValue) : paramValue;
+        if (param.type === 'json') paramValue = this.validJSON(paramValue) ? JSON.parse(paramValue) : paramValue;
+        if (param.type === 'date') {
+          paramValue = {
+            [this.selectedDateComparisonType]: paramValue,
+          };
+        }
+
+        return {
+          ...obj,
+          [param.key]: paramValue,
+        };
+      };
+
       const query = this.searchParams
         .filter(x => x.key && x.value)
-        .reduce((obj, param) => {
-          let paramValue = param.value;
-          if (param.type === 'number') paramValue = Number(paramValue);
-          // if (param.type === 'date') paramValue =
-          return {
-            ...obj,
-            [param.key]: paramValue,
-          };
-        }, {});
+        .reduce(reducer, {});
 
-      return JSON.stringify(query);
+      return query;
+    },
+    stringQuery() {
+      return JSON.stringify(this.query);
     },
   },
   watch: {},
   methods: {
+    validJSON(str) {
+      try {
+        JSON.parse(str);
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
+    validNumber(val) {
+      return !Number.isNaN(Number(val));
+    },
+    selectDateComparisonType(val) {
+      this.selectedDateComparisonType = val;
+    },
     addSearchParam() {
       this.searchParams.push({
         key: '',
@@ -179,13 +250,28 @@ export default {
       this.searchParams.splice(index, 1);
     },
     getRules(val) {
-      if (val.type === 'number') return [this.rules.number];
-      return [];
+      const rules = [];
+      if (val.type === 'number') rules.push(this.rules.number);
+      if (val.type === 'json') rules.push(this.rules.json);
+
+      return rules;
     },
     copyQueryToClipboard() {
       const queryField = document.querySelector('#query');
       queryField.select();
       document.execCommand('copy');
+    },
+    async sendSearchQuery() {
+      try {
+        const response = await this.girderRest.get('collection/geobrowser/search', {
+          params: {
+            query: this.query,
+          },
+        });
+        this.searchResults = response.data;
+      } catch (err) {
+        this.searchResults = [];
+      }
     },
   },
 };
