@@ -42,7 +42,10 @@
                     </v-flex>
                   </v-layout>
                 </v-flex>
-                <v-flex grow class="ma-2">
+                <v-flex
+                  grow
+                  class="ma-2"
+                >
                   <v-card flat>
                     <v-text-field
                       v-model="param.key"
@@ -57,15 +60,52 @@
                       solo
                       :rules="getRules(param)"
                     />
-                    <v-flex v-else shrink>
+                    <v-flex
+                      v-else
+                      shrink
+                    >
                       <v-select
-                        :items=dateComparisonTypes
+                        :items="dateComparisonTypes"
+                        label="Comparison"
+                        prepend-inner-icon="mdi-calculator"
+                        hide-details
                         @change="selectDateComparisonType"
                       />
-                      <v-date-picker
-                        class="my-3"
-                        v-model="param.value"
-                      />
+                      <v-menu
+                        ref="menu"
+                        v-model="param.dateMenu"
+                        :close-on-content-click="false"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="param.value"
+                            label="Date"
+                            hide-details
+                            readonly
+                            prepend-inner-icon="mdi-calendar"
+                            v-on="on"
+                          />
+                        </template>
+                        <v-date-picker
+                          v-model="param.value"
+                          no-title
+                          scrollable
+                        >
+                          <v-spacer />
+                          <v-btn
+                            flat
+                            color="primary"
+                            @click="param.dateMenu = false"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-menu>
                     </v-flex>
                   </v-card>
                 </v-flex>
@@ -162,7 +202,7 @@ export default {
       resultsPanel: [],
       rules: {
         number: val => this.validNumber(val) || 'Invalid Number',
-        json: val => this.validJSON(val) || 'Invalid JSON'
+        json: val => this.validJSON(val) || 'Invalid JSON',
       },
       selectedDateComparisonType: null,
       dateComparisonTypes: [
