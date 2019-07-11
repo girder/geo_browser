@@ -51,13 +51,16 @@ class GeoBrowserPlugin(GirderPlugin):
             ('geobrowser',),
             forceDeleteAllHandler)
 
-        if config.getConfig()['server']['mode'] == 'production':
+        frontEndResource = os.path.realpath(
+            resource_filename(
+                'geobrowser_plugin',
+                'external_web_client'
+            )
+        )
+        if (os.path.exists(frontEndResource)
+           or config.getConfig()['server']['mode'] != 'development'):
             info['config']['/geobrowser'] = {
                 'tools.staticdir.on': True,
-                'tools.staticdir.dir': os.path.realpath(
-                    resource_filename(
-                        'geobrowser_plugin',
-                        'external_web_client')
-                ),
+                'tools.staticdir.dir': frontEndResource,
                 'tools.staticdir.index': 'index.html'
             }

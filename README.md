@@ -16,7 +16,7 @@ pip install girder-geobrowser
 
 **WARNING**
 
-If you run `girder serve` in development mode, the standalone frontend will not be served at `/geobrowser`. This is because it is expected that the frontend will be served on its own (E.g. `yarn run serve`) in order to see the changes being made. If for some reason you need to serve the frontend at `/geobrowser`, you will need to run girder serve in production mode. However be aware that in this case it is serving the pre-built files, and thus no changes will take affect until you rebuild the frontend (E.g. by running `python setup.py build_ui`).
+The standalone frontend will be served at `/geobrowser` if the built front-end path exists (i.e. `python setup.py build_ui` has been run), or if the mode is not `development`. So, if running `girder serve` in `development` mode, you should see no errors if the frontend is not built. However, if running `girder serve` in `production` mode, it will attempt to serve the files, regardless of if they've been built or not, throwing an error through cherrypy if they don't exist.
 
 ## Custom Girder CLI Commands
 This plugin adds a Girder CLI command, `extract-geospatial`. This command manually runs the [Geospatial](https://github.com/OpenGeoscience/girder_geospatial) plugin on any Girder paths specified (defaults to '/'). To specify one or more path, use the `-p` argument. For example, to run this command on the collections `collection1` and `collection2`, you would run:
