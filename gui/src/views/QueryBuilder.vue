@@ -6,110 +6,115 @@
         class="ma-1"
       >
         <v-layout column>
+          <h1>Collection Search Builder</h1>
           <v-card>
             <h1>Search Filters</h1>
             <v-flex
               v-for="(param, i) in searchParams"
               :key="i"
             >
-              <v-layout column>
-                <v-flex shrink>
-                  <v-layout
-                    class="mx-2"
-                    align-center
-                    row
-                  >
-                    <v-radio-group
-                      v-model="param.type"
+              <v-card class="my-1">
+                <v-layout column>
+                  <v-flex shrink>
+                    <v-layout
+                      class="mx-2"
+                      align-center
                       row
                     >
-                      <v-radio
-                        v-for="(type, j) in paramTypes"
-                        :key="j"
-                        :label="type.label"
-                        :value="type.value"
-                      />
-                    </v-radio-group>
-                    <v-flex>
-                      <v-btn
-                        color="error"
-                        flat
-                        icon
-                        @click="deleteSearchParam(i)"
+                      <v-radio-group
+                        v-model="param.type"
+                        row
                       >
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
-                    </v-flex>
-                  </v-layout>
-                </v-flex>
-                <v-flex
-                  grow
-                  class="ma-2"
-                >
-                  <v-card flat>
-                    <v-text-field
-                      v-model="param.key"
-                      label="Key"
-                      hide-details
-                      solo
-                    />
-                    <v-text-field
-                      v-if="param.type !== 'date'"
-                      v-model="param.value"
-                      label="Value"
-                      solo
-                      :rules="getRules(param)"
-                    />
-                    <v-flex
-                      v-else
-                      shrink
-                    >
-                      <v-select
-                        :items="dateComparisonTypes"
-                        label="Comparison"
-                        prepend-inner-icon="mdi-calculator"
-                        hide-details
-                        @change="selectDateComparisonType"
-                      />
-                      <v-menu
-                        ref="menu"
-                        v-model="param.dateMenu"
-                        :close-on-content-click="false"
-                        lazy
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <v-text-field
-                            v-model="param.value"
-                            label="Date"
-                            hide-details
-                            readonly
-                            prepend-inner-icon="mdi-calendar"
-                            v-on="on"
-                          />
-                        </template>
-                        <v-date-picker
-                          v-model="param.value"
-                          no-title
-                          scrollable
+                        <v-radio
+                          v-for="(type, j) in paramTypes"
+                          :key="j"
+                          :label="type.label"
+                          :value="type.value"
+                        />
+                      </v-radio-group>
+                      <v-flex>
+                        <v-btn
+                          color="error"
+                          flat
+                          icon
+                          @click="deleteSearchParam(i)"
                         >
-                          <v-spacer />
-                          <v-btn
-                            flat
-                            color="primary"
-                            @click="param.dateMenu = false"
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </v-flex>
+                    </v-layout>
+                  </v-flex>
+                  <v-flex
+                    grow
+                    class="ma-2"
+                  >
+                    <v-card flat>
+                      <v-text-field
+                        v-model="param.key"
+                        label="Key"
+                        hide-details
+                        solo
+                        flat
+                      />
+                      <v-text-field
+                        v-if="param.type !== 'date'"
+                        v-model="param.value"
+                        label="Value"
+                        solo
+                        flat
+                        :rules="getRules(param)"
+                      />
+                      <v-flex
+                        v-else
+                        shrink
+                      >
+                        <v-select
+                          :items="dateComparisonTypes"
+                          label="Comparison"
+                          prepend-inner-icon="mdi-calculator"
+                          hide-details
+                          @change="selectDateComparisonType"
+                        />
+                        <v-menu
+                          ref="menu"
+                          v-model="param.dateMenu"
+                          :close-on-content-click="false"
+                          lazy
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="param.value"
+                              label="Date"
+                              hide-details
+                              readonly
+                              prepend-inner-icon="mdi-calendar"
+                              v-on="on"
+                            />
+                          </template>
+                          <v-date-picker
+                            v-model="param.value"
+                            no-title
+                            scrollable
                           >
-                            OK
-                          </v-btn>
-                        </v-date-picker>
-                      </v-menu>
-                    </v-flex>
-                  </v-card>
-                </v-flex>
-              </v-layout>
+                            <v-spacer />
+                            <v-btn
+                              flat
+                              color="primary"
+                              @click="param.dateMenu = false"
+                            >
+                              OK
+                            </v-btn>
+                          </v-date-picker>
+                        </v-menu>
+                      </v-flex>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
+              </v-card>
             </v-flex>
             <v-btn
               color="success"
@@ -206,12 +211,30 @@ export default {
       },
       selectedDateComparisonType: null,
       dateComparisonTypes: [
-        '$gt',
-        '$gte',
-        '$lt',
-        '$lte',
-        '$eq',
-        '$ne',
+        {
+          text: 'Greater Than (>)',
+          value: '$gt',
+        },
+        {
+          text: 'Greater Than/Equal To (≥)',
+          value: '$gte',
+        },
+        {
+          text: 'Less Than (<)',
+          value: '$lt',
+        },
+        {
+          text: 'Less Than/Equal To (≤	)',
+          value: '$lte',
+        },
+        {
+          text: 'Equal (=)',
+          value: '$eq',
+        },
+        {
+          text: 'Not Equal (≠)',
+          value: '$ne',
+        },
       ],
       paramTypes: [
         {
