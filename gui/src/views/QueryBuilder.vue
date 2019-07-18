@@ -49,68 +49,77 @@
                     class="ma-2"
                   >
                     <v-card flat>
-                      <v-text-field
-                        v-model="param.key"
-                        label="Key"
-                        hide-details
-                        solo
-                        flat
-                      />
-                      <v-text-field
-                        v-if="param.type !== 'date'"
-                        v-model="param.value"
-                        label="Value"
-                        solo
-                        flat
-                        :rules="getRules(param)"
-                      />
-                      <v-flex
-                        v-else
-                        shrink
-                      >
-                        <v-select
-                          :items="dateComparisonTypes"
-                          label="Comparison"
-                          prepend-inner-icon="mdi-calculator"
-                          hide-details
-                          @change="selectDateComparisonType"
+                      <template v-if="param.type === 'json'">
+                        <v-textarea
+                          v-model="param.value"
+                          :rules="getRules(param)"
+                          box
                         />
-                        <v-menu
-                          ref="menu"
-                          v-model="param.dateMenu"
-                          :close-on-content-click="false"
-                          lazy
-                          transition="scale-transition"
-                          offset-y
-                          full-width
-                          min-width="290px"
+                      </template>
+                      <template v-else>
+                        <v-text-field
+                          v-model="param.key"
+                          label="Key"
+                          hide-details
+                          solo
+                          flat
+                        />
+                        <v-text-field
+                          v-if="param.type !== 'date'"
+                          v-model="param.value"
+                          label="Value"
+                          solo
+                          flat
+                          :rules="getRules(param)"
+                        />
+                        <v-flex
+                          v-else
+                          shrink
                         >
-                          <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="param.value"
-                              label="Date"
-                              hide-details
-                              readonly
-                              prepend-inner-icon="mdi-calendar"
-                              v-on="on"
-                            />
-                          </template>
-                          <v-date-picker
-                            v-model="param.value"
-                            no-title
-                            scrollable
+                          <v-select
+                            :items="dateComparisonTypes"
+                            label="Comparison"
+                            prepend-inner-icon="mdi-calculator"
+                            hide-details
+                            @change="selectDateComparisonType"
+                          />
+                          <v-menu
+                            ref="menu"
+                            v-model="param.dateMenu"
+                            :close-on-content-click="false"
+                            lazy
+                            transition="scale-transition"
+                            offset-y
+                            full-width
+                            min-width="290px"
                           >
-                            <v-spacer />
-                            <v-btn
-                              flat
-                              color="primary"
-                              @click="param.dateMenu = false"
+                            <template v-slot:activator="{ on }">
+                              <v-text-field
+                                v-model="param.value"
+                                label="Date"
+                                hide-details
+                                readonly
+                                prepend-inner-icon="mdi-calendar"
+                                v-on="on"
+                              />
+                            </template>
+                            <v-date-picker
+                              v-model="param.value"
+                              no-title
+                              scrollable
                             >
-                              OK
-                            </v-btn>
-                          </v-date-picker>
-                        </v-menu>
-                      </v-flex>
+                              <v-spacer />
+                              <v-btn
+                                flat
+                                color="primary"
+                                @click="param.dateMenu = false"
+                              >
+                                OK
+                              </v-btn>
+                            </v-date-picker>
+                          </v-menu>
+                        </v-flex>
+                      </template>
                     </v-card>
                   </v-flex>
                 </v-layout>
@@ -260,10 +269,18 @@ export default {
   },
   computed: {
     query() {
+      const filter = x => (x.key && x.value) || x.type === 'json';
       const reducer = (obj, param) => {
         let paramValue = param.value;
         if (param.type === 'number') paramValue = this.validNumber(paramValue) ? Number(paramValue) : paramValue;
-        if (param.type === 'json') paramValue = this.validJSON(paramValue) ? JSON.parse(paramValue) : paramValue;
+        if (param.type === 'json' && this.validJSON(paramValue)) {
+          paramValue = JSON.parse(paramValue);
+          return {
+            ...obj,
+            ...paramValue,
+          };
+        }
+
         if (param.type === 'date') {
           paramValue = {
             [this.selectedDateComparisonType]: paramValue,
@@ -277,7 +294,7 @@ export default {
       };
 
       const query = this.searchParams
-        .filter(x => x.key && x.value)
+        .filter(filter)
         .reduce(reducer, {});
 
       return query;
