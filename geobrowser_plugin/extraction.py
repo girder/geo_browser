@@ -18,25 +18,24 @@ def extract(path):
     resources = []
 
     if '/' in path:
-        resources += [x for x in Collection().find({})]
-        resources += [x for x in User().find({})]
+        resources += list(Collection().find())
+        resources += list(User().find())
     elif '/collection' in path:
-        resources += [x for x in Collection().find({})]
+        resources += list(Collection().find())
     elif '/user' in path:
-        resources += [x for x in User().find({})]
+        resources += list(User().find())
     else:
-        for p in path:
-            resources.append(lookUpPath(p)['document'])
+        resources += [lookUpPath(p)['document'] for p in path]
 
     for resource in resources:
-        items = [dict(x) for x in Item().find({
+        items = list(Item().find({
             'baseParentId': resource['_id']
-        })]
+        }))
 
         for item in items:
-            files = [dict(x) for x in File().find({
+            files = list(File().find({
                 'itemId': item['_id']
-            })]
+            }))
 
             for file in files:
                 create_geometa(item, file)
