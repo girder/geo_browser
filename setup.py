@@ -60,7 +60,7 @@ with open('README.md') as readme:
 
 setup(
     name='girder-geobrowser',
-    version='0.2.2',
+    version='0.2.3',
     description='Map-oriented custom Girder app'
                 'for geospatial metadata browsing',
     long_description=long_description,
