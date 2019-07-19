@@ -22,8 +22,9 @@
                       row
                     >
                       <v-radio-group
-                        v-model="param.type"
                         row
+                        :value="param.type"
+                        @change="selectType(param, $event)"
                       >
                         <v-radio
                           v-for="(type, j) in paramTypes"
@@ -305,6 +306,12 @@ export default {
   },
   watch: {},
   methods: {
+    selectType(param, type) {
+      /* eslint-disable no-param-reassign */
+      param.type = type;
+      param.value = '';
+      /* eslint-enable no-param-reassign */
+    },
     validJSON(str) {
       try {
         JSON.parse(str);
