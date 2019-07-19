@@ -15,9 +15,18 @@ from girder.models.collection import Collection
               help="The metadata to populate the desired collection(s) with.")
 def populate(id, data):
     data = json.load(open(data, 'r'))
+    success = 0
 
     for collectionId in id:
         collection = Collection().findOne({
             '_id': ObjectId(collectionId)
         })
-        Collection().setMetadata(collection=collection, metadata=data)
+
+        if (collection):
+            Collection().setMetadata(collection=collection, metadata=data)
+            success += 1
+        else:
+            click.echo('Warning: No collection found with ID: ' + collectionId)
+
+    click.echo('Successfully set metadata on '
+               + str(success) + '/' + str(len(id)) + ' collections')
