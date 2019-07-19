@@ -1,0 +1,27 @@
+{
+    "classification": "Unclassified",
+    "distribution": "C",
+    "governmentOwner": "Todd V. Rovito",
+    "governmentOrganization": "AFRL/RYAT",
+    "governmentEmail": "todd.rovito@us.af.mil",
+    "program": "VIGILANT",
+    "locationDescription": "Rochester, NY",
+    "upperLeftLatLonDecimalDegrees": [
+        39.789439,
+        -84.02897
+    ],
+    "lowerRightLatLonDecimalDegrees": [
+        38.789439,
+        -84.000212
+    ],
+    "sensorTypes": [
+        "DIRSIG",
+        "WorldView 2"
+    ],
+    "domain": "space",
+    "dateStart": "2018-08-01",
+    "dateEnd": "2018-08-12",
+    "timeStart": "8:00 AM",
+    "timeEnd": "10:00 PM",
+    "comments": "panchromatic and color"
+}

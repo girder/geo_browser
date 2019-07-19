@@ -1,0 +1,29 @@
+{
+    "classification": "Unclassified",
+    "distribution": "C",
+    "governmentOwner": "Todd V. Rovito",
+    "governmentOrganization": "AFRL/RYAT",
+    "governmentEmail": "todd.rovito@us.af.mil",
+    "program": "VIGILANT",
+    "locationDescription": "Ukrainka, Russia",
+    "upperLeftLatLonDecimalDegrees": [
+        39.789439,
+        -84.02897
+    ],
+    "lowerRightLatLonDecimalDegrees": [
+        38.789439,
+        -84.000212
+    ],
+    "sensorTypes": [
+        "EO",
+        "WorldView 2",
+        "WorldView 3",
+        "GeoEye"
+    ],
+    "domain": "space",
+    "dateStart": "2016-08-01",
+    "dateEnd": "2018-08-12",
+    "timeStart": "8:00 AM",
+    "timeEnd": "10:00 PM",
+    "comments": "TU-95 Bomber Airfield, 150 labels, panchromatic and color"
+}

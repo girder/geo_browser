@@ -1,0 +1,26 @@
+{
+    "classification": "Unclassified",
+    "distribution": "A",
+    "governmentOwner": "Todd V. Rovito",
+    "governmentOrganization": "AFRL/RYAT",
+    "governmentEmail": "todd.rovito@us.af.mil",
+    "program": "AngelFire",
+    "locationDescription": "Columbus, OH",
+    "upperLeftLatLonDecimalDegrees": [
+        39.789439,
+        -84.02897
+    ],
+    "lowerRightLatLonDecimalDegrees": [
+        38.789439,
+        -84.000212
+    ],
+    "sensorTypes": [
+        "WAMI MWIR"
+    ],
+    "domain": "air",
+    "dateStart": "2008-08-01",
+    "dateEnd": "2008-08-12",
+    "timeStart": "8:00 AM",
+    "timeEnd": "10:00 PM",
+    "comments": "WAMI EO over columbus Ohio GSD 0.5 with 3.5 Million labels"
+}

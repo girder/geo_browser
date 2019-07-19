@@ -1,0 +1,9 @@
+{
+    "meta.distribution": "A",
+    "meta.sensorTypes": {
+        "$regex": ".*MWIR.*"
+    },
+    "meta.dateStart": {
+        "$gt": "2008-01-01"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "meta.dateStart": {
+        "$gte": "2016-01-01"
+    },
+    "meta.dateEnd": {
+        "$lte": "2016-12-31"
+    },
+    "meta.sensorTypes": {
+        "$regex": ".*MWIR.*"
+    }
+}

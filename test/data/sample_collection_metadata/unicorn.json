@@ -1,0 +1,27 @@
+{
+    "classification": "Unclassified",
+    "distribution": "A",
+    "governmentOwner": "Todd V. Rovito",
+    "governmentOrganization": "AFRL/RYAT",
+    "governmentEmail": "todd.rovito@us.af.mil",
+    "program": "GOTCHA",
+    "locationDescription": "WPAFB, OH",
+    "upperLeftLatLonDecimalDegrees": [
+        39.789439,
+        -84.02897
+    ],
+    "lowerRightLatLonDecimalDegrees": [
+        38.789439,
+        -84.000212
+    ],
+    "sensorTypes": [
+        "WAMI MWIR",
+        "WAMI SAR"
+    ],
+    "domain": "air",
+    "dateStart": "2008-08-01",
+    "dateEnd": "2008-08-12",
+    "timeStart": "8:00 AM",
+    "timeEnd": "10:00 PM",
+    "comments": "Coincedent collection of GOTCHA and AngelFire with 12.7 million labels"
+}
