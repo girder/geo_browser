@@ -31,8 +31,6 @@
               <GirderLogin />
             </v-card>
           </v-dialog>
-        </v-list-tile>
-        <v-list-tile class="nav-bar-list-tile">
           <v-dialog
             v-model="registerOpen"
             max-width="30%"
@@ -53,14 +51,25 @@
         </v-list-tile>
       </v-list>
       <v-list v-else>
-        <h1> {{ currentUserFirstName }} </h1>
-        <v-btn
-          depressed
-          color="error"
-          @click="logout"
+        <v-list-tile class="nav-bar-list-tile">
+          <h1> {{ currentUserFirstName }} </h1>
+          <v-btn
+            depressed
+            color="error"
+            @click="logout"
+          >
+            Logout
+          </v-btn>
+        </v-list-tile>
+      </v-list>
+      <v-list>
+        <v-list-tile
+          v-for="route in navRoutes"
+          :key="route.name"
+          @click="navigateToRoute(route)"
         >
-          Logout
-        </v-btn>
+          {{ route.name }}
+        </v-list-tile>
       </v-list>
     </template>
   </v-navigation-drawer>
@@ -93,6 +102,10 @@ export default {
       apiAccessed: state => state.api.accessed,
       navDrawerMini: state => state.app.navDrawerMini,
     }),
+    navRoutes() {
+      const dynamicRouteNames = ['Item View'];
+      return this.$router.options.routes.filter(route => !dynamicRouteNames.includes(route.name));
+    },
   },
   watch: {
     login() {
@@ -101,6 +114,9 @@ export default {
     },
   },
   methods: {
+    navigateToRoute(route) {
+      this.$router.push(route);
+    },
     toggleNavDrawer() {
       this.$store.commit('TOGGLE_NAV_DRAWER');
     },

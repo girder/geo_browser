@@ -9,17 +9,17 @@ export default new Router({
   routes: [
     {
       path: '/query/',
-      name: 'QueryBuilder',
+      name: 'Query Builder',
       component: QueryBuilder,
     },
     {
       path: '/item/:id',
-      name: 'Item',
+      name: 'Item View',
       component: DefaultItemView,
     },
     {
       path: '/',
-      name: 'Main',
+      name: 'Main Page',
       component: MainPage,
     },
   ],
