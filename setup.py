@@ -78,7 +78,8 @@ setup(
             'geobrowser = geobrowser_plugin:GeoBrowserPlugin'
         ],
         'girder.cli_plugins': [
-            'extract-geospatial = geobrowser_plugin.extraction:extract'
+            'extract-geospatial = geobrowser_plugin.extraction:extract',
+            'populate-collection-meta = geobrowser_plugin.population:populate'
         ]
     },
     cmdclass={

@@ -233,7 +233,7 @@ export default {
           value: '$lt',
         },
         {
-          text: 'Less Than/Equal To (≤	)',
+          text: 'Less Than/Equal To (≤)',
           value: '$lte',
         },
         {
