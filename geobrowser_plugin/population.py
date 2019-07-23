@@ -3,7 +3,8 @@ import json
 from bson.objectid import ObjectId
 
 from girder.models.collection import Collection
-from girder.utility.path import lookUpPath
+from girder.utility.path import lookUpPath, split
+from girder.exceptions import ResourcePathNotFound
 
 
 @click.command(name='populate-collection-meta',
@@ -38,12 +39,19 @@ def populate(ids, paths, data):
             click.echo('Warning: No collection found with ID: ' + collectionId)
 
     for path in paths:
-        doc = lookUpPath(path, force=True)
-        if doc['model'] != 'collection':
-            click.echo('Warning: Ignoring non-collection path: ' + path)
-            continue
+        # Truncates anything past the collection level
+        path = '/'.join(split(path.lstrip('/'))[0:2])
 
-        doc = doc['document']
+        try:
+            doc = lookUpPath(path, force=True)
+            if doc['model'] != 'collection':
+                click.echo('Warning: Ignoring non-collection path: ' + path)
+                continue
+            doc = doc['document']
+        except(ResourcePathNotFound):
+            name = split(path)[1]
+            doc = Collection().createCollection(name, reuseExisting=True)
+
         Collection().setMetadata(collection=doc, metadata=data)
         success += 1
 
