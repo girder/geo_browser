@@ -358,6 +358,8 @@ export default {
         this.searchResults = response.data;
       } catch (err) {
         this.searchResults = [];
+      } finally {
+        this.resultsPanel = [];
       }
     },
   },
