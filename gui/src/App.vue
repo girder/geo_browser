@@ -37,7 +37,6 @@ export default {
       loggedIn: state => state.user.loggedIn,
       login: state => state.user.login,
       apiAccessed: state => state.api.accessed,
-      navDrawerMini: state => state.app.navDrawerMini,
     }),
     girderRestUser() {
       return this.girderRest.user;

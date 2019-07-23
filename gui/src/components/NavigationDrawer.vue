@@ -1,78 +1,82 @@
 <template class="nav-drawer-container">
-  <v-navigation-drawer
-    :mini-variant="navDrawerMini"
-    app
-    hide-overlay
-  >
-    <v-icon
-      large
-      color="blue"
-      @click="toggleNavDrawer"
+  <v-hover>
+    <v-navigation-drawer
+      slot-scope="{ hover }"
+      :mini-variant="!hover"
+      :temporary="hover"
+      hide-overlay
+      disable-route-watcher
+      app
     >
-      mdi-account-circle
-    </v-icon>
-    <template v-if="apiAccessed && !navDrawerMini">
-      <v-list v-if="!loggedIn">
-        <v-list-tile class="nav-bar-list-tile">
-          <v-dialog
-            v-model="loginOpen"
-            max-width="30%"
+      <v-icon
+        large
+        color="blue"
+      >
+        mdi-account-circle
+      </v-icon>
+      <template v-if="apiAccessed && hover">
+        <v-list v-if="!loggedIn">
+          <v-list-tile class="nav-bar-list-tile">
+            <v-dialog
+              v-model="loginOpen"
+              max-width="30%"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  color="secondary"
+                  v-on="on"
+                >
+                  Login
+                </v-btn>
+              </template>
+              <v-card>
+                <GirderLogin />
+              </v-card>
+            </v-dialog>
+            <v-dialog
+              v-model="registerOpen"
+              max-width="30%"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  color="primary"
+                  v-on="on"
+                >
+                  Register
+                </v-btn>
+              </template>
+              <v-card>
+                <GirderRegister />
+              </v-card>
+            </v-dialog>
+          </v-list-tile>
+        </v-list>
+        <v-list v-else>
+          <v-list-tile class="nav-bar-list-tile">
+            <h1> {{ currentUserFirstName }} </h1>
+            <v-btn
+              depressed
+              color="error"
+              @click="logout"
+            >
+              Logout
+            </v-btn>
+          </v-list-tile>
+        </v-list>
+        <v-list>
+          <v-list-tile
+            v-for="route in navRoutes"
+            :key="route.name"
+            @click="navigateToRoute(route)"
           >
-            <template v-slot:activator="{ on }">
-              <v-btn
-                depressed
-                color="secondary"
-                v-on="on"
-              >
-                Login
-              </v-btn>
-            </template>
-            <v-card>
-              <GirderLogin />
-            </v-card>
-          </v-dialog>
-          <v-dialog
-            v-model="registerOpen"
-            max-width="30%"
-          >
-            <template v-slot:activator="{ on }">
-              <v-btn
-                depressed
-                color="primary"
-                v-on="on"
-              >
-                Register
-              </v-btn>
-            </template>
-            <v-card>
-              <GirderRegister />
-            </v-card>
-          </v-dialog>
-        </v-list-tile>
-      </v-list>
-      <v-list v-else>
-        <v-list-tile class="nav-bar-list-tile">
-          <h1> {{ currentUserFirstName }} </h1>
-          <v-btn
-            depressed
-            color="error"
-            @click="logout"
-          >
-            Logout
-          </v-btn>
-        </v-list-tile>
-      </v-list>
-      <v-list>
-        <v-list-tile
-          v-for="route in navRoutes"
-          :key="route.name"
-          @click="navigateToRoute(route)"
-        >
-          {{ route.name }}
-        </v-list-tile>
-      </v-list>
-    </template>
-  </v-navigation-drawer>
+            {{ route.name }}
+          </v-list-tile>
+        </v-list>
+      </template>
+    </v-navigation-drawer>
+  </v-hover>
 </template>
 
 <script>
@@ -100,7 +104,6 @@ export default {
       loggedIn: state => state.user.loggedIn,
       login: state => state.user.login,
       apiAccessed: state => state.api.accessed,
-      navDrawerMini: state => state.app.navDrawerMini,
     }),
     navRoutes() {
       const dynamicRouteNames = ['Item View'];
