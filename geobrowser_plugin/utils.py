@@ -11,8 +11,9 @@ def itemAddedToCollection(self, event):
     item = ItemModel().load(event.info['file']['itemId'],
                             user=self.getCurrentUser())
 
-    if item['baseParentType'] != 'collection':
+    if item['baseParentType'] != 'collection' or 'geometa' not in item:
         return
+
     collection = CollectionModel().load(item['baseParentId'],
                                         user=self.getCurrentUser())
 
