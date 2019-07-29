@@ -36,6 +36,7 @@ To use a Girder path instead of a collection ID, use the -p/--path option (also 
 ```
 girder populate-collection-meta -p /collection/foo -d metadata.json
 ```
+When using this option, if the specified path doesn't exist, it will be created.
 
 ## Standalone Frontend Setup
 
