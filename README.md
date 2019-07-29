@@ -32,6 +32,10 @@ This command populates the specified collection(s) with the provided metadata. T
 ```
 girder populate-collection-meta -i 5d3201b4dbdd758d55819007 -i 5d3201c54731b3d3a1350823 -d metadata.json
 ```
+To use a Girder path instead of a collection ID, use the -p/--path option (also works with multiple):
+```
+girder populate-collection-meta -p /collection/foo -d metadata.json
+```
 
 ## Standalone Frontend Setup
 
