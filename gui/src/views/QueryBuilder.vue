@@ -61,16 +61,12 @@
                         <v-text-field
                           v-model="param.key"
                           label="Key"
-                          hide-details
-                          solo
-                          flat
+                          :rules="getRules(param)"
                         />
                         <v-text-field
                           v-if="param.type !== 'date'"
                           v-model="param.value"
                           label="Value"
-                          solo
-                          flat
                           :rules="getRules(param)"
                         />
                         <v-flex
@@ -127,7 +123,7 @@
               </v-card>
             </v-flex>
             <v-btn
-              color="success"
+              color="secondary"
               @click="addSearchParam"
             >
               <v-icon>mdi-plus</v-icon>
@@ -152,6 +148,7 @@
                 :value="stringQuery"
                 solo
                 readonly
+                background-color="#D3D3D3"
                 hide-details
                 @click:append="copyQueryToClipboard"
               />
@@ -218,6 +215,7 @@ export default {
       rules: {
         number: val => this.validNumber(val) || 'Invalid Number',
         json: val => this.validJSON(val) || 'Invalid JSON',
+        any: val => !!val || 'Required',
       },
       selectedDateComparisonType: null,
       dateComparisonTypes: [
@@ -340,6 +338,7 @@ export default {
       const rules = [];
       if (val.type === 'number') rules.push(this.rules.number);
       if (val.type === 'json') rules.push(this.rules.json);
+      rules.push(this.rules.any);
 
       return rules;
     },
