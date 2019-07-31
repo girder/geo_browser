@@ -8,7 +8,21 @@
         <v-layout column>
           <h1>Collection Search Builder</h1>
           <v-card>
-            <h1>Search Filters</h1>
+            <v-layout>
+              <v-flex xs11>
+                <h1 class="text-xs-left mx-2">
+                  Search Filters
+                </h1>
+              </v-flex>
+              <v-flex v-if="searchParams.length">
+                <v-btn
+                  icon
+                  @click="searchParams = []"
+                >
+                  <v-icon>mdi-notification-clear-all</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-layout>
             <v-flex
               v-for="(param, i) in searchParams"
               :key="i"
