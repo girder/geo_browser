@@ -26,6 +26,7 @@
             <v-flex
               v-for="(param, i) in searchParams"
               :key="i"
+              @input="searchResults = []"
             >
               <v-card class="my-1">
                 <v-layout column>
