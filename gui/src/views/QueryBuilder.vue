@@ -20,7 +20,7 @@
                     <v-icon>mdi-help-circle</v-icon>
                   </v-btn>
                 </template>
-                <v-card>
+                <v-card class="text-xs-left">
                   <MarkdownViewer :text="helpPageText" />
                 </v-card>
               </v-dialog>
@@ -129,7 +129,6 @@
                                 v-model="param.value"
                                 label="Date"
                                 hide-details
-                                readonly
                                 prepend-inner-icon="mdi-calendar"
                                 v-on="on"
                               />
