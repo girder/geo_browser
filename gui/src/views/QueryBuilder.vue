@@ -6,7 +6,26 @@
         class="ma-1"
       >
         <v-layout column>
-          <h1>Collection Search Builder</h1>
+          <v-layout>
+            <v-flex>
+              <h1>Collection Search Builder</h1>
+            </v-flex>
+            <v-flex>
+              <v-dialog>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    v-on="on"
+                  >
+                    <v-icon>mdi-help-circle</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <MarkdownViewer :text="helpPageText" />
+                </v-card>
+              </v-dialog>
+            </v-flex>
+          </v-layout>
           <v-card>
             <v-layout>
               <v-flex xs11>
@@ -215,15 +234,19 @@
 <script>
 
 import VueJsonPretty from 'vue-json-pretty';
+import MarkdownViewer from '@girder/components/src/components/Markdown.vue';
+import HelpPage from '@/assets/QueryHelpPage.md';
 
 export default {
   name: 'QueryBuilder',
   inject: ['girderRest'],
   components: {
     VueJsonPretty,
+    MarkdownViewer,
   },
   data() {
     return {
+      helpPageText: HelpPage,
       searchParams: [],
       searchResults: [],
       resultsPanel: [],
