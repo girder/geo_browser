@@ -8,19 +8,21 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
+      path: '/',
+      name: 'Main Page',
+      component: MainPage,
+      icon: 'mdi-home',
+    },
+    {
       path: '/query/',
       name: 'Query Builder',
       component: QueryBuilder,
+      icon: 'mdi-magnify',
     },
     {
       path: '/item/:id',
       name: 'Item View',
       component: DefaultItemView,
-    },
-    {
-      path: '/',
-      name: 'Main Page',
-      component: MainPage,
     },
   ],
 });

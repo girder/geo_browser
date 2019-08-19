@@ -68,9 +68,27 @@
           :key="route.name"
           @click="navigateToRoute(route)"
         >
-          {{ route.name }}
+          <v-list-tile-avatar>
+            <v-icon>{{ route.icon }}</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ route.name }}
+            </v-list-tile-title>
+          </v-list-tile-content>
         </v-list-tile>
       </v-list>
+    </template>
+    <template v-else-if="navDrawerMini">
+      <v-flex
+        v-for="route in navRoutes"
+        :key="route.name"
+        @click="navigateToRoute(route)"
+      >
+        <v-btn icon>
+          <v-icon>{{ route.icon }}</v-icon>
+        </v-btn>
+      </v-flex>
     </template>
   </v-navigation-drawer>
 </template>
@@ -103,8 +121,7 @@ export default {
       navDrawerMini: state => state.app.navDrawerMini,
     }),
     navRoutes() {
-      const dynamicRouteNames = ['Item View'];
-      return this.$router.options.routes.filter(route => !dynamicRouteNames.includes(route.name));
+      return this.$router.options.routes.slice(0, 2);
     },
   },
   watch: {
