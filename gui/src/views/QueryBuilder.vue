@@ -155,13 +155,21 @@
                 </v-layout>
               </v-card>
             </v-flex>
-            <v-btn
-              color="secondary"
-              @click="addSearchParam"
-            >
-              <v-icon>mdi-plus</v-icon>
-              Add Item
-            </v-btn>
+            <v-flex>
+              <v-btn
+                color="secondary"
+                @click="addSearchParam"
+              >
+                <v-icon>mdi-plus</v-icon>
+                Add Item
+              </v-btn>
+              <v-btn
+                color="success"
+                @click="applyAndSearch"
+              >
+                Apply
+              </v-btn>
+            </v-flex>
           </v-card>
         </v-layout>
       </v-flex>
@@ -185,14 +193,6 @@
                 hide-details
                 @click:append="copyQueryToClipboard"
               />
-            </v-flex>
-            <v-flex shrink>
-              <v-btn
-                color="success"
-                @click="sendSearchQuery"
-              >
-                Search
-              </v-btn>
             </v-flex>
           </v-layout>
           <v-layout
@@ -249,6 +249,7 @@ export default {
       searchParams: [],
       searchResults: [],
       resultsPanel: [],
+      activeQuery: '',
       rules: {
         number: val => this.validNumber(val) || 'Invalid Number',
         json: val => this.validJSON(val) || 'Invalid JSON',
@@ -304,7 +305,7 @@ export default {
     };
   },
   computed: {
-    query() {
+    internalQuery() {
       const filter = x => (x.key && x.value) || x.type === 'json';
       const reducer = (obj, param) => {
         let paramValue = param.value;
@@ -336,7 +337,8 @@ export default {
       return query;
     },
     stringQuery() {
-      return JSON.stringify(this.query);
+      if (!this.activeQuery) return this.activeQuery;
+      return JSON.stringify(this.activeQuery);
     },
   },
   watch: {},
@@ -384,11 +386,12 @@ export default {
       queryField.select();
       document.execCommand('copy');
     },
-    async sendSearchQuery() {
+    async applyAndSearch() {
+      this.activeQuery = this.internalQuery;
       try {
         const response = await this.girderRest.get('collection/geobrowser/search', {
           params: {
-            query: this.query,
+            query: this.activeQuery,
           },
         });
         this.searchResults = response.data;
