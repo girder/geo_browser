@@ -211,7 +211,7 @@
             row
             shrink
           >
-            <v-flex xs11>
+            <v-flex>
               <v-text-field
                 id="query"
                 append-icon="mdi-content-copy"
