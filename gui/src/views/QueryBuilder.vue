@@ -218,7 +218,6 @@
                 :value="stringQuery"
                 solo
                 readonly
-                background-color="#D3D3D3"
                 hide-details
                 @click:append="copyQueryToClipboard"
               />
