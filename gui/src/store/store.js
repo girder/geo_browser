@@ -36,6 +36,9 @@ const store = new Vuex.Store({
     TOGGLE_NAV_DRAWER(state) {
       state.app.navDrawerMini = !state.app.navDrawerMini;
     },
+    SET_NAV_DRAWER(state, open = true) {
+      state.app.navDrawerMini = open;
+    },
     /* eslint-enable no-param-reassign */
   },
   actions: {},

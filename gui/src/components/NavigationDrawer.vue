@@ -6,14 +6,39 @@
   >
     <v-icon
       large
-      color="blue"
       @click="toggleNavDrawer"
     >
-      mdi-account-circle
+      {{ navDrawerMini ? 'mdi-chevron-right' : 'mdi-chevron-left' }}
     </v-icon>
     <template v-if="apiAccessed && !navDrawerMini">
-      <v-list v-if="!loggedIn">
-        <v-list-tile class="nav-bar-list-tile">
+      <v-list>
+        <v-list-tile v-if="loggedIn">
+          <v-list-tile-avatar>
+            <v-icon color="blue">
+              mdi-account-circle
+            </v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ currentUserFirstName }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+          <v-list-action>
+            <v-btn
+              depressed
+              icon
+              @click="logout"
+            >
+              <v-icon color="error">
+                mdi-logout
+              </v-icon>
+            </v-btn>
+          </v-list-action>
+        </v-list-tile>
+        <v-list-tile
+          v-else
+          class="nav-bar-list-tile"
+        >
           <v-dialog
             v-model="loginOpen"
             max-width="30%"
@@ -49,20 +74,6 @@
             </v-card>
           </v-dialog>
         </v-list-tile>
-      </v-list>
-      <v-list v-else>
-        <v-list-tile class="nav-bar-list-tile">
-          <h1> {{ currentUserFirstName }} </h1>
-          <v-btn
-            depressed
-            color="error"
-            @click="logout"
-          >
-            Logout
-          </v-btn>
-        </v-list-tile>
-      </v-list>
-      <v-list>
         <v-list-tile
           v-for="route in navRoutes"
           :key="route.name"
@@ -133,6 +144,7 @@ export default {
   methods: {
     navigateToRoute(route) {
       this.$router.push(route);
+      this.$store.commit('SET_NAV_DRAWER', true);
     },
     toggleNavDrawer() {
       this.$store.commit('TOGGLE_NAV_DRAWER');
