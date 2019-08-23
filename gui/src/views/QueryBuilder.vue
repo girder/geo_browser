@@ -194,6 +194,7 @@
               </v-btn>
               <v-btn
                 color="success"
+                :disabled="internalQuery === activeQuery"
                 @click="applyAndSearch"
               >
                 Apply
