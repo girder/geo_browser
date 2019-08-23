@@ -3,4 +3,14 @@ module.exports = {
   devServer: {
     port: 8081,
   },
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.(md|txt)$/,
+          use: 'raw-loader',
+        },
+      ],
+    },
+  },
 };

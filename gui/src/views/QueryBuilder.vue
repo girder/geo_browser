@@ -6,133 +6,200 @@
         class="ma-1"
       >
         <v-layout column>
-          <h1>Collection Search Builder</h1>
+          <v-layout>
+            <v-flex>
+              <h1>Collection Search Builder</h1>
+            </v-flex>
+            <v-flex>
+              <v-dialog>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    v-on="on"
+                  >
+                    <v-icon>mdi-help-circle</v-icon>
+                  </v-btn>
+                </template>
+                <v-card class="text-xs-left">
+                  <MarkdownViewer :text="helpPageText" />
+                </v-card>
+              </v-dialog>
+            </v-flex>
+          </v-layout>
           <v-card>
-            <h1>Search Filters</h1>
-            <v-flex
-              v-for="(param, i) in searchParams"
-              :key="i"
-            >
-              <v-card class="my-1">
-                <v-layout column>
-                  <v-flex shrink>
-                    <v-layout
-                      class="mx-2"
-                      align-center
-                      row
-                    >
-                      <v-radio-group
+            <v-layout>
+              <v-flex xs11>
+                <h1 class="text-xs-left mx-2">
+                  Search Filters
+                </h1>
+              </v-flex>
+              <v-flex v-if="searchParams.length">
+                <v-btn
+                  icon
+                  @click="searchParams = []"
+                >
+                  <v-icon>mdi-notification-clear-all</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-layout>
+            <v-list>
+              <v-list-tile
+                v-for="(param, i) in searchParams"
+                :key="i"
+              >
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    {{ param.key }}: {{ param.value }}
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title>
+                    {{ param.type }}
+                  </v-list-tile-sub-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-btn
+                    icon
+                    ripple
+                    @click="deleteSearchParam(i)"
+                  >
+                    <v-icon color="error">
+                      mdi-delete
+                    </v-icon>
+                  </v-btn>
+                </v-list-tile-action>
+              </v-list-tile>
+            </v-list>
+            <v-flex>
+              <v-dialog v-model="addItemDialog">
+                <v-card class="my-1">
+                  <v-layout column>
+                    <v-flex shrink>
+                      <v-layout
+                        class="mx-2"
+                        align-center
                         row
-                        :value="param.type"
-                        @change="selectType(param, $event)"
                       >
-                        <v-radio
-                          v-for="(type, j) in paramTypes"
-                          :key="j"
-                          :label="type.label"
-                          :value="type.value"
-                        />
-                      </v-radio-group>
-                      <v-flex>
-                        <v-btn
-                          color="error"
-                          flat
-                          icon
-                          @click="deleteSearchParam(i)"
+                        <v-radio-group
+                          v-model="newSearchParam.type"
+                          row
                         >
-                          <v-icon>mdi-delete</v-icon>
+                          <v-radio
+                            v-for="(type, j) in paramTypes"
+                            :key="j"
+                            :label="type.label"
+                            :value="type.value"
+                          />
+                        </v-radio-group>
+                      </v-layout>
+                    </v-flex>
+                    <v-flex
+                      grow
+                      class="ma-2"
+                    >
+                      <v-card flat>
+                        <template v-if="newSearchParam.type === 'json'">
+                          <v-textarea
+                            v-model="newSearchParam.value"
+                            :rules="getRules(newSearchParam)"
+                            box
+                          />
+                        </template>
+                        <template v-else>
+                          <v-text-field
+                            v-model="newSearchParam.key"
+                            label="Key"
+                            :rules="keyRules"
+                          />
+                          <v-text-field
+                            v-if="newSearchParam.type !== 'date'"
+                            v-model="newSearchParam.value"
+                            label="Value"
+                            :rules="getRules(newSearchParam)"
+                          />
+                          <v-flex
+                            v-else
+                            shrink
+                          >
+                            <v-select
+                              :items="dateComparisonTypes"
+                              label="Comparison"
+                              prepend-inner-icon="mdi-calculator"
+                              hide-details
+                              @change="selectDateComparisonType"
+                            />
+                            <v-menu
+                              ref="menu"
+                              v-model="newSearchParam.dateMenu"
+                              :close-on-content-click="false"
+                              lazy
+                              transition="scale-transition"
+                              offset-y
+                              full-width
+                              min-width="290px"
+                            >
+                              <template v-slot:activator="{ on }">
+                                <v-text-field
+                                  v-model="newSearchParam.value"
+                                  label="Date"
+                                  hide-details
+                                  prepend-inner-icon="mdi-calendar"
+                                  v-on="on"
+                                />
+                              </template>
+                              <v-date-picker
+                                v-model="newSearchParam.value"
+                                no-title
+                                scrollable
+                              >
+                                <v-spacer />
+                                <v-btn
+                                  flat
+                                  color="primary"
+                                  @click="newSearchParam.dateMenu = false"
+                                >
+                                  OK
+                                </v-btn>
+                              </v-date-picker>
+                            </v-menu>
+                          </v-flex>
+                        </template>
+                      </v-card>
+                    </v-flex>
+                    <v-layout>
+                      <v-flex shrink>
+                        <v-btn
+                          color="secondary"
+                          @click="cancelSearchParam"
+                        >
+                          Cancel
+                        </v-btn>
+                      </v-flex>
+                      <v-flex shrink>
+                        <v-btn
+                          color="success"
+                          @click="addSearchParam"
+                        >
+                          Add
                         </v-btn>
                       </v-flex>
                     </v-layout>
-                  </v-flex>
-                  <v-flex
-                    grow
-                    class="ma-2"
-                  >
-                    <v-card flat>
-                      <template v-if="param.type === 'json'">
-                        <v-textarea
-                          v-model="param.value"
-                          :rules="getRules(param)"
-                          box
-                        />
-                      </template>
-                      <template v-else>
-                        <v-text-field
-                          v-model="param.key"
-                          label="Key"
-                          hide-details
-                          solo
-                          flat
-                        />
-                        <v-text-field
-                          v-if="param.type !== 'date'"
-                          v-model="param.value"
-                          label="Value"
-                          solo
-                          flat
-                          :rules="getRules(param)"
-                        />
-                        <v-flex
-                          v-else
-                          shrink
-                        >
-                          <v-select
-                            :items="dateComparisonTypes"
-                            label="Comparison"
-                            prepend-inner-icon="mdi-calculator"
-                            hide-details
-                            @change="selectDateComparisonType"
-                          />
-                          <v-menu
-                            ref="menu"
-                            v-model="param.dateMenu"
-                            :close-on-content-click="false"
-                            lazy
-                            transition="scale-transition"
-                            offset-y
-                            full-width
-                            min-width="290px"
-                          >
-                            <template v-slot:activator="{ on }">
-                              <v-text-field
-                                v-model="param.value"
-                                label="Date"
-                                hide-details
-                                readonly
-                                prepend-inner-icon="mdi-calendar"
-                                v-on="on"
-                              />
-                            </template>
-                            <v-date-picker
-                              v-model="param.value"
-                              no-title
-                              scrollable
-                            >
-                              <v-spacer />
-                              <v-btn
-                                flat
-                                color="primary"
-                                @click="param.dateMenu = false"
-                              >
-                                OK
-                              </v-btn>
-                            </v-date-picker>
-                          </v-menu>
-                        </v-flex>
-                      </template>
-                    </v-card>
-                  </v-flex>
-                </v-layout>
-              </v-card>
+                  </v-layout>
+                </v-card>
+              </v-dialog>
+              <v-btn
+                color="secondary"
+                @click="clickAddItem"
+              >
+                <v-icon>mdi-plus</v-icon>
+                Add Item
+              </v-btn>
+              <v-btn
+                color="success"
+                :disabled="internalQuery === activeQuery"
+                @click="applyAndSearch"
+              >
+                Apply
+              </v-btn>
             </v-flex>
-            <v-btn
-              color="success"
-              @click="addSearchParam"
-            >
-              <v-icon>mdi-plus</v-icon>
-              Add Item
-            </v-btn>
           </v-card>
         </v-layout>
       </v-flex>
@@ -145,7 +212,7 @@
             row
             shrink
           >
-            <v-flex xs11>
+            <v-flex>
               <v-text-field
                 id="query"
                 append-icon="mdi-content-copy"
@@ -155,14 +222,6 @@
                 hide-details
                 @click:append="copyQueryToClipboard"
               />
-            </v-flex>
-            <v-flex shrink>
-              <v-btn
-                color="success"
-                @click="sendSearchQuery"
-              >
-                Search
-              </v-btn>
             </v-flex>
           </v-layout>
           <v-layout
@@ -203,21 +262,32 @@
 <script>
 
 import VueJsonPretty from 'vue-json-pretty';
+import MarkdownViewer from '@girder/components/src/components/Markdown.vue';
+import HelpPage from '@/assets/QueryHelpPage.md';
 
 export default {
   name: 'QueryBuilder',
   inject: ['girderRest'],
   components: {
     VueJsonPretty,
+    MarkdownViewer,
   },
   data() {
     return {
+      helpPageText: HelpPage,
       searchParams: [],
       searchResults: [],
       resultsPanel: [],
-      rules: {
+      activeQuery: '',
+      newSearchParam: {},
+      addItemDialog: false,
+      keyRules: [
+        key => key.length > 0 || 'Required',
+      ],
+      valueRules: {
         number: val => this.validNumber(val) || 'Invalid Number',
         json: val => this.validJSON(val) || 'Invalid JSON',
+        any: val => !!val || 'Required',
       },
       selectedDateComparisonType: null,
       dateComparisonTypes: [
@@ -264,12 +334,16 @@ export default {
           value: 'json',
         },
       ],
-      defaultParamType: 'string',
+      defaultSearchParam: {
+        key: '',
+        value: '',
+        type: 'string',
+      },
       error: false,
     };
   },
   computed: {
-    query() {
+    internalQuery() {
       const filter = x => (x.key && x.value) || x.type === 'json';
       const reducer = (obj, param) => {
         let paramValue = param.value;
@@ -301,17 +375,23 @@ export default {
       return query;
     },
     stringQuery() {
-      return JSON.stringify(this.query);
+      if (!this.activeQuery) return this.activeQuery;
+      return JSON.stringify(this.activeQuery);
+    },
+    validSearchParamKey() {
+      return !this.keyRules.filter(x => typeof x(this.newSearchParam.key) === 'string').length;
+    },
+    validSearchParamValue() {
+      const rules = this.getRules(this.newSearchParam);
+      const errors = rules.filter(x => typeof x(this.newSearchParam.value) === 'string');
+      return errors.length === 0;
     },
   },
   watch: {},
+  created() {
+    this.newSearchParam = { ...this.defaultSearchParam };
+  },
   methods: {
-    selectType(param, type) {
-      /* eslint-disable no-param-reassign */
-      param.type = type;
-      param.value = '';
-      /* eslint-enable no-param-reassign */
-    },
     validJSON(str) {
       try {
         JSON.parse(str);
@@ -326,20 +406,27 @@ export default {
     selectDateComparisonType(val) {
       this.selectedDateComparisonType = val;
     },
+    clickAddItem() {
+      this.addItemDialog = true;
+    },
     addSearchParam() {
-      this.searchParams.push({
-        key: '',
-        value: '',
-        type: this.defaultParamType,
-      });
+      if (!this.validSearchParamKey || !this.validSearchParamValue) return;
+      this.searchParams.push(this.newSearchParam);
+      this.newSearchParam = { ...this.defaultSearchParam };
+      this.addItemDialog = false;
     },
     deleteSearchParam(index) {
       this.searchParams.splice(index, 1);
     },
+    cancelSearchParam() {
+      this.newSearchParam = { ...this.defaultSearchParam };
+      this.addItemDialog = false;
+    },
     getRules(val) {
       const rules = [];
-      if (val.type === 'number') rules.push(this.rules.number);
-      if (val.type === 'json') rules.push(this.rules.json);
+      if (val.type === 'number') rules.push(this.valueRules.number);
+      if (val.type === 'json') rules.push(this.valueRules.json);
+      rules.push(this.valueRules.any);
 
       return rules;
     },
@@ -348,11 +435,12 @@ export default {
       queryField.select();
       document.execCommand('copy');
     },
-    async sendSearchQuery() {
+    async applyAndSearch() {
+      this.activeQuery = this.internalQuery;
       try {
         const response = await this.girderRest.get('collection/geobrowser/search', {
           params: {
-            query: this.query,
+            query: this.activeQuery,
           },
         });
         this.searchResults = response.data;
