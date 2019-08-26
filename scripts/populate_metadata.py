@@ -2,6 +2,8 @@ import click
 import girder_client
 import json
 
+from .util import createGirderClient
+
 
 @click.command(
     name="populate-metadata",
@@ -47,11 +49,9 @@ def main(ids, data, meta, username, password, api_key, api_url):
     else:
         raise click.ClickException("Either --data or --meta required.")
 
-    gc = girder_client.GirderClient(apiUrl=api_url)
-    if username and password:
-        gc.authenticate(username=username, password=password)
-    elif api_key:
-        gc.authenticate(apiKey=api_key)
+    gc = createGirderClient(
+        api_url, api_key=api_key, username=username, password=password
+    )
 
     failed = []
     for colId in ids:
