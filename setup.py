@@ -71,7 +71,8 @@ setup(
     include_package_data=True,
     packages=find_packages(),
     install_requires=[
-        'shapely'
+        'shapely',
+        'girder-client'
     ],
     entry_points={
         'girder.plugin': [
@@ -80,6 +81,10 @@ setup(
         'girder.cli_plugins': [
             'extract-geospatial = geobrowser_plugin.extraction:extract',
             'populate-collection-meta = geobrowser_plugin.population:populate'
+        ],
+        'console_scripts': [
+            'query-collection = scripts.collection_query:main',
+            'populate-metadata = scripts.populate_metadata:main'
         ]
     },
     cmdclass={
