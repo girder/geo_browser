@@ -1,5 +1,4 @@
 import click
-import girder_client
 import json
 
 from .util import createGirderClient
