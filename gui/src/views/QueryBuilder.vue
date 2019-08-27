@@ -48,8 +48,11 @@
                 :key="i"
               >
                 <v-list-tile-content>
-                  <v-list-tile-title>
+                  <v-list-tile-title v-if="param.type !== 'json'">
                     {{ param.key }}: {{ param.value }}
+                  </v-list-tile-title>
+                  <v-list-tile-title v-else>
+                    {{ param.value }}
                   </v-list-tile-title>
                   <v-list-tile-sub-title>
                     {{ param.type }}
@@ -410,7 +413,10 @@ export default {
       this.addItemDialog = true;
     },
     addSearchParam() {
-      if (!this.validSearchParamKey || !this.validSearchParamValue) return;
+      if (
+        !this.validSearchParamValue
+        || (!this.validSearchParamKey && this.newSearchParam.type !== 'json')
+      ) return;
       this.searchParams.push(this.newSearchParam);
       this.newSearchParam = { ...this.defaultSearchParam };
       this.addItemDialog = false;
