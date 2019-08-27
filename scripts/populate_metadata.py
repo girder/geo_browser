@@ -64,9 +64,10 @@ def main(ids, data, meta, username, password, api_key, api_url):
         except girder_client.HttpError:
             failed.append(colId)
 
-    click.echo("Operation failed on the following collection ids:")
-    click.echo(", ".join(failed))
-    click.echo("")
+    if (failed):
+        click.echo("Operation failed on the following collection ids:")
+        click.echo(", ".join(failed))
+        click.echo("")
     click.echo(
         "Successfully set metadata on "
         + str(len(ids) - len(failed))
