@@ -410,7 +410,10 @@ export default {
       this.addItemDialog = true;
     },
     addSearchParam() {
-      if (!this.validSearchParamKey || !this.validSearchParamValue) return;
+      if (
+        !this.validSearchParamValue
+        || (!this.validSearchParamKey && this.newSearchParam.type !== 'json')
+      ) return;
       this.searchParams.push(this.newSearchParam);
       this.newSearchParam = { ...this.defaultSearchParam };
       this.addItemDialog = false;
